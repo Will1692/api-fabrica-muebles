@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: API Fábrica de Muebles
+  description: Documentación de la API para la gestión de clientes, proveedores, producción y administración de la fábrica de muebles.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor local de desarrollo
+
+paths:
+  /clientes:
+    get:
+      summary: Obtener todos los clientes
+      responses:
+        "200":
+          description: Lista de clientes obtenida correctamente
+    post:
+      summary: Agregar un nuevo cliente
+      responses:
+        "201":
+          description: Cliente creado correctamente
+
+  /proveedores:
+    get:
+      summary: Obtener todos los proveedores
+      responses:
+        "200":
+          description: Lista de proveedores obtenida correctamente
+    post:
+      summary: Agregar un nuevo proveedor
+      responses:
+        "201":
+          description: Proveedor creado correctamente
+
+  /produccion:
+    get:
+      summary: Obtener registros de producción
+      responses:
+        "200":
+          description: Lista de registros de producción
+    post:
+      summary: Registrar nueva producción
+      responses:
+        "201":
+          description: Producción registrada correctamente
+
+  /administracion:
+    get:
+      summary: Obtener registros administrativos
+      responses:
+        "200":
+          description: Lista de registros administrativos
+    post:
+      summary: Agregar registro administrativo
+      responses:
+        "201":
+          description: Registro agregado correctamente
