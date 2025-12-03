@@ -1,0 +1,34 @@
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+!modulo-java/lib/*.jar
+*.war
+*.nar
+*.ear
+
+# Log files
+*.log
+
+# IDE
+.vscode/
+.settings/
+.classpath
+.project
+.idea/
+
+# Build folders
+bin/
+build/
+target/
+out/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
