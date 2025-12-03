@@ -62,9 +62,6 @@ class ConexionBD:
             cls._inicializar()
 
         try:
-            print(f"Intentando conectar a: {cls._host}:{cls._port}/{cls._database}")
-            print(f"Usuario: {cls._user}")
-
             conexion = pymysql.connect(
                 host=cls._host,
                 port=cls._port,
@@ -74,7 +71,6 @@ class ConexionBD:
                 charset=cls._charset,
                 autocommit=False
             )
-            print("Conexión creada exitosamente")
             return conexion
         except Error as e:
             print(f"ERROR DETALLADO: {str(e)}")

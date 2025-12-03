@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61d11bb-f7eb-45c8-814d-44f9e0829785" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/fabrica_muebles_python.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/dao/cliente_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/dao/produccion_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/dao/proveedor_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/modelo/administracion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/modelo/cliente.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/modelo/produccion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/modelo/proveedor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_cliente.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_completo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/fabrica/muebles/util/conexion_bd.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/util/conexion_bd.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
