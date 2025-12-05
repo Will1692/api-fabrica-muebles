@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61d11bb-f7eb-45c8-814d-44f9e0829785" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/util/crear_tablas_automatico.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/fabrica/muebles/util/verificar_tablas.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/verificar_bd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md.py" beforeDir="false" afterPath="$PROJECT_DIR$/README.md.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
