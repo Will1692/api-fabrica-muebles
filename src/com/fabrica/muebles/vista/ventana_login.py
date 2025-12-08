@@ -70,10 +70,10 @@ class VentanaLogin:
             messagebox.showwarning("Validacion", "Ingrese usuario y contraseña")
             return
 
-        user = self.dao.autenticar(usuario, password)
+        exito, resultado = self.dao.autenticar_usuario(usuario, password)
 
-        if user:
-            self.usuario_autenticado = user
+        if exito:
+            self.usuario_autenticado = resultado
             self.ventana.destroy()
         else:
             messagebox.showerror("Error", "Usuario o contraseña incorrectos")
@@ -83,62 +83,118 @@ class VentanaLogin:
     def registrar(self):
         ventana_registro = tk.Toplevel(self.ventana)
         ventana_registro.title("Registro de Usuario")
-        ventana_registro.geometry("400x400")
+        ventana_registro.geometry("450x700")
         ventana_registro.resizable(False, False)
         ventana_registro.configure(bg="#34495E")
 
-        x = (ventana_registro.winfo_screenwidth() - 400) // 2
-        y = (ventana_registro.winfo_screenheight() - 400) // 2
-        ventana_registro.geometry(f"400x400+{x}+{y}")
+        x = (ventana_registro.winfo_screenwidth() - 450) // 2
+        y = (ventana_registro.winfo_screenheight() - 700) // 2
+        ventana_registro.geometry(f"450x700+{x}+{y}")
 
         tk.Label(ventana_registro, text="REGISTRO DE USUARIO", font=("Arial", 16, "bold"),
                  bg="#34495E", fg="white").pack(pady=20)
 
-        frame = tk.Frame(ventana_registro, bg="#34495E", padx=20, pady=20)
+        frame = tk.Frame(ventana_registro, bg="#34495E", padx=30, pady=20)
         frame.pack()
 
-        tk.Label(frame, text="Usuario:", bg="#34495E", fg="white").grid(row=0, column=0, sticky="w", pady=5)
-        txt_reg_usuario = tk.Entry(frame, width=25)
-        txt_reg_usuario.grid(row=0, column=1, pady=5)
+        # Usuario
+        tk.Label(frame, text="Usuario:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=0, column=0, sticky="w",
+                                                                                            pady=10)
+        txt_reg_usuario = tk.Entry(frame, width=30, font=("Arial", 11))
+        txt_reg_usuario.grid(row=0, column=1, pady=10, columnspan=2, sticky="ew")
 
-        tk.Label(frame, text="Contraseña:", bg="#34495E", fg="white").grid(row=1, column=0, sticky="w", pady=5)
-        txt_reg_password = tk.Entry(frame, width=25, show="*")
-        txt_reg_password.grid(row=1, column=1, pady=5)
+        # Contraseña
+        tk.Label(frame, text="Contraseña:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=1, column=0,
+                                                                                               sticky="w", pady=10)
+        txt_reg_password = tk.Entry(frame, width=30, show="*", font=("Arial", 11))
+        txt_reg_password.grid(row=1, column=1, pady=10, columnspan=2, sticky="ew")
 
-        tk.Label(frame, text="Email:", bg="#34495E", fg="white").grid(row=2, column=0, sticky="w", pady=5)
-        txt_reg_email = tk.Entry(frame, width=25)
-        txt_reg_email.grid(row=2, column=1, pady=5)
+        # Email
+        tk.Label(frame, text="Email:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=2, column=0, sticky="w",
+                                                                                          pady=10)
+        txt_reg_email = tk.Entry(frame, width=30, font=("Arial", 11))
+        txt_reg_email.grid(row=2, column=1, pady=10, columnspan=2, sticky="ew")
 
-        tk.Label(frame, text="Rol:", bg="#34495E", fg="white").grid(row=3, column=0, sticky="w", pady=5)
+        # Tipo de Documento
+        tk.Label(frame, text="Tipo de Documento:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=3, column=0,
+                                                                                                      sticky="w",
+                                                                                                      pady=10)
+        tipo_doc_var = tk.StringVar(value="CC")
+        frame_tipo_doc = tk.Frame(frame, bg="#34495E")
+        frame_tipo_doc.grid(row=3, column=1, sticky="w", columnspan=2)
+        tk.Radiobutton(frame_tipo_doc, text="C.C", variable=tipo_doc_var, value="CC",
+                       bg="#34495E", fg="white", selectcolor="#2C3E50", font=("Arial", 10)).pack(side=tk.LEFT,
+                                                                                                 padx=(0, 20))
+        tk.Radiobutton(frame_tipo_doc, text="NIT", variable=tipo_doc_var, value="NIT",
+                       bg="#34495E", fg="white", selectcolor="#2C3E50", font=("Arial", 10)).pack(side=tk.LEFT)
 
-        rol_var = tk.StringVar(value="clientes")
-        roles = [("Clientes", "clientes"), ("Proveedores", "proveedores"),
-                 ("Produccion", "produccion"), ("Administrador", "administrador")]
+        # Número de Documento
+        tk.Label(frame, text="Número de Documento:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=4, column=0,
+                                                                                                        sticky="w",
+                                                                                                        pady=10)
+        txt_num_documento = tk.Entry(frame, width=30, font=("Arial", 11))
+        txt_num_documento.grid(row=4, column=1, pady=10, columnspan=2, sticky="ew")
 
-        for i, (texto, valor) in enumerate(roles):
-            tk.Radiobutton(frame, text=texto, variable=rol_var, value=valor,
-                           bg="#34495E", fg="white", selectcolor="#2C3E50").grid(row=4 + i, column=1, sticky="w")
+        # Contacto
+        tk.Label(frame, text="Contacto:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=5, column=0,
+                                                                                             sticky="w", pady=10)
+        txt_contacto = tk.Entry(frame, width=30, font=("Arial", 11))
+        txt_contacto.grid(row=5, column=1, pady=10, columnspan=2, sticky="ew")
+
+        # Rol (SOLO Produccion y Administrador)
+        tk.Label(frame, text="Rol:", bg="#34495E", fg="white", font=("Arial", 11)).grid(row=6, column=0, sticky="w",
+                                                                                        pady=10)
+        rol_var = tk.StringVar(value="Produccion")
+        frame_rol = tk.Frame(frame, bg="#34495E")
+        frame_rol.grid(row=6, column=1, sticky="w", columnspan=2)
+        tk.Radiobutton(frame_rol, text="Produccion", variable=rol_var, value="Produccion",
+                       bg="#34495E", fg="white", selectcolor="#2C3E50", font=("Arial", 10)).pack(anchor="w")
+        tk.Radiobutton(frame_rol, text="Administrador", variable=rol_var, value="Administrador",
+                       bg="#34495E", fg="white", selectcolor="#2C3E50", font=("Arial", 10)).pack(anchor="w")
 
         def guardar():
-            if not txt_reg_usuario.get() or not txt_reg_password.get():
-                messagebox.showwarning("Validacion", "Complete todos los campos")
+            # Validar campos obligatorios
+            if not txt_reg_usuario.get().strip():
+                messagebox.showwarning("Validacion", "El campo Usuario es requerido")
+                txt_reg_usuario.focus()
+                return
+            if not txt_reg_password.get().strip():
+                messagebox.showwarning("Validacion", "El campo Contraseña es requerido")
+                txt_reg_password.focus()
+                return
+            if not txt_reg_email.get().strip():
+                messagebox.showwarning("Validacion", "El campo Email es requerido")
+                txt_reg_email.focus()
+                return
+            if not txt_num_documento.get().strip():
+                messagebox.showwarning("Validacion", "El campo Número de Documento es requerido")
+                txt_num_documento.focus()
+                return
+            if not txt_contacto.get().strip():
+                messagebox.showwarning("Validacion", "El campo Contacto es requerido")
+                txt_contacto.focus()
                 return
 
             nuevo_usuario = Usuario(
-                usuario=txt_reg_usuario.get(),
-                password=txt_reg_password.get(),
-                rol=rol_var.get(),
-                email=txt_reg_email.get()
+                usuario=txt_reg_usuario.get().strip(),
+                contrasena=txt_reg_password.get().strip(),
+                email=txt_reg_email.get().strip(),
+                tipo_documento=tipo_doc_var.get(),
+                numero_documento=txt_num_documento.get().strip(),
+                contacto=txt_contacto.get().strip(),
+                rol=rol_var.get()
             )
 
-            if self.dao.registrar(nuevo_usuario):
-                messagebox.showinfo("Exito", "Usuario registrado correctamente")
+            exito, mensaje = self.dao.registrar_usuario(nuevo_usuario)
+
+            if exito:
+                messagebox.showinfo("Exito", mensaje)
                 ventana_registro.destroy()
             else:
-                messagebox.showerror("Error", "No se pudo registrar el usuario")
+                messagebox.showerror("Error", mensaje)
 
         tk.Button(ventana_registro, text="REGISTRAR", bg="#27AE60", fg="white",
-                  font=("Arial", 12, "bold"), width=15, command=guardar).pack(pady=20)
+                  font=("Arial", 12, "bold"), width=15, height=2, cursor="hand2", command=guardar).pack(pady=30)
 
     def recuperar(self):
         email = simpledialog.askstring("Recuperar Contraseña", "Ingrese su email registrado:",
