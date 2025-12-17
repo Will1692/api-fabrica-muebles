@@ -23,7 +23,7 @@ class VentanaClientes:
 
     def inicializar(self):
         self.ventana.title("Gestión de Clientes - Fábrica de Muebles")
-        self.ventana.geometry("1300x520")
+        self.ventana.geometry("1300x540")  # ← Reducido porque observaciones es 1 línea
         self.ventana.configure(bg="#ECF0F1")
         self.centrar_ventana()
         self.crear_panel_superior()
@@ -35,8 +35,8 @@ class VentanaClientes:
     def centrar_ventana(self):
         self.ventana.update_idletasks()
         x = (self.ventana.winfo_screenwidth() - 1300) // 2
-        y = (self.ventana.winfo_screenheight() - 520) // 2
-        self.ventana.geometry(f'1300x520+{x}+{y}')
+        y = (self.ventana.winfo_screenheight() - 540) // 2
+        self.ventana.geometry(f'1300x540+{x}+{y}')
 
     def crear_panel_superior(self):
         panel = tk.Frame(self.ventana, bg="#2C3E50", height=80)
@@ -87,6 +87,7 @@ class VentanaClientes:
                         tk.Radiobutton(frame_tipo, text=txt, variable=self.tipo_doc_var, value=val,
                                        bg="#ECF0F1", font=("Arial", 9)).pack(side=tk.LEFT, padx=(0, pad))
 
+        # Foto del mueble
         tk.Label(grid, text="Foto del Mueble:", font=("Arial", 10, "bold"),
                  bg="#ECF0F1").grid(row=3, column=0, sticky="w", padx=5, pady=8)
         frame_foto = tk.Frame(grid, bg="#ECF0F1")
@@ -97,6 +98,12 @@ class VentanaClientes:
         self.lbl_foto = tk.Label(frame_foto, text="No se ha seleccionado foto",
                                  font=("Arial", 9, "italic"), bg="#ECF0F1", fg="#7F8C8D")
         self.lbl_foto.pack(side=tk.LEFT)
+
+        # ✅ NUEVO: Campo de Observaciones (Entry de 1 línea)
+        tk.Label(grid, text="Observaciones:", font=("Arial", 10, "bold"),
+                 bg="#ECF0F1", fg="#9B59B6").grid(row=4, column=0, sticky="w", padx=5, pady=8)
+        self.txt_observaciones = tk.Entry(grid, font=("Arial", 10), width=95)
+        self.txt_observaciones.grid(row=4, column=1, columnspan=7, padx=5, pady=8, sticky="ew")
 
         for i in [1, 3, 5]:
             grid.columnconfigure(i, weight=1)
@@ -200,7 +207,7 @@ class VentanaClientes:
 
         if not self.tabla_visible:
             self.frame_resultados.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 10))
-            self.ventana.geometry("1300x900")
+            self.ventana.geometry("1300x920")  # ← Ajustado
             self.tabla_visible = True
 
     def crear_tarjeta_cliente(self, cliente, idx):
@@ -284,6 +291,16 @@ class VentanaClientes:
             tk.Label(fila3, text=valor, font=("Arial", 9),
                      bg="#FFFFFF").pack(side=tk.LEFT, padx=(0, 20))
 
+        # ✅ NUEVO: Fila 4 - Observaciones (si existen)
+        if hasattr(cliente, 'observaciones') and cliente.observaciones:
+            fila4 = tk.Frame(frame_der, bg="#FFFFFF")
+            fila4.pack(fill=tk.X, pady=5)
+
+            tk.Label(fila4, text="Observaciones:", font=("Arial", 9, "bold"),
+                     bg="#FFFFFF", fg="#9B59B6").pack(side=tk.LEFT, padx=(0, 5), anchor="nw")
+            tk.Label(fila4, text=cliente.observaciones, font=("Arial", 9),
+                     bg="#FFFFFF", wraplength=900, justify="left").pack(side=tk.LEFT, fill=tk.X, expand=True)
+
         # Botones de acción
         btn_frame = tk.Frame(frame_der, bg="#FFFFFF")
         btn_frame.pack(fill=tk.X, pady=5)
@@ -300,15 +317,6 @@ class VentanaClientes:
         """Selecciona un cliente desde la tarjeta"""
         self.cliente_seleccionado = cliente
         self.cargar_datos_formulario()
-
-        # Hacer scroll hacia arriba para ver el formulario
-        self.ventana.update_idletasks()
-
-        # Mostrar mensaje confirmando
-        print(f"Cliente seleccionado: {cliente.nombre}")
-        print(f"Código mueble: {getattr(cliente, 'codigo_mueble', 'N/A')}")
-        print(f"Num documento: {getattr(cliente, 'numero_documento', 'N/A')}")
-
         messagebox.showinfo("✅ Cliente Cargado",
                             f"Datos de {cliente.nombre} cargados en el formulario.\n\n"
                             f"Revise los campos de arriba para ver los datos.")
@@ -320,24 +328,20 @@ class VentanaClientes:
 
     def cargar_datos_formulario(self):
         if not self.cliente_seleccionado:
-            print("ERROR: No hay cliente seleccionado")
             return
 
-        print(f"\n=== CARGANDO DATOS DEL CLIENTE ===")
-        print(f"Cliente: {self.cliente_seleccionado.nombre}")
-
-        # Guardar referencia antes de limpiar
         cliente = self.cliente_seleccionado
 
-        # Limpiar campos pero NO cliente_seleccionado
+        # Limpiar campos
         for campo in ['codigo_mueble', 'nombre', 'num_documento', 'telefono',
                       'direccion', 'email', 'tipo_mueble', 'valor_mueble']:
             if hasattr(self, f'txt_{campo}'):
                 getattr(self, f'txt_{campo}').delete(0, tk.END)
 
         self.txt_cantidad.delete(0, tk.END)
-        self.txt_cantidad.insert(0, "1")
+        self.txt_observaciones.delete(0, tk.END)  # ← Limpiar observaciones (Entry)
 
+        # Cargar datos
         campos = {
             'codigo_mueble': getattr(cliente, 'codigo_mueble', ''),
             'nombre': cliente.nombre or "",
@@ -351,37 +355,27 @@ class VentanaClientes:
         }
 
         for campo, valor in campos.items():
-            print(f"Procesando {campo}: {valor}")
             if campo == 'cantidad':
-                if hasattr(self, 'txt_cantidad'):
-                    self.txt_cantidad.delete(0, tk.END)
-                    self.txt_cantidad.insert(0, str(valor))
-                    print(f"  ✓ Cantidad actualizada")
-                else:
-                    print(f"  ✗ ERROR: txt_cantidad no existe")
+                self.txt_cantidad.insert(0, str(valor))
             elif hasattr(self, f'txt_{campo}'):
-                widget = getattr(self, f'txt_{campo}')
-                widget.delete(0, tk.END)
-                widget.insert(0, str(valor))
-                print(f"  ✓ {campo} actualizado")
-            else:
-                print(f"  ✗ ERROR: txt_{campo} no existe")
+                getattr(self, f'txt_{campo}').insert(0, str(valor))
 
         self.tipo_doc_var.set(getattr(cliente, 'tipo_documento', 'CC'))
-        print(f"Tipo documento: {self.tipo_doc_var.get()}")
 
+        # ✅ Cargar observaciones
+        if hasattr(cliente, 'observaciones') and cliente.observaciones:
+            self.txt_observaciones.insert(0, cliente.observaciones)
+
+        # Cargar foto
         foto = getattr(cliente, 'ruta_foto', None)
         if foto:
             self.ruta_foto = foto
             self.lbl_foto.config(text=f"📷 {os.path.basename(foto)}", fg="#27AE60")
-            print(f"Foto cargada: {os.path.basename(foto)}")
-
-        print("=== FIN CARGA ===\n")
 
     def nuevo(self):
         self.limpiar_formulario()
-        self.txt_codigo_mueble.focus()
-        messagebox.showinfo("Nuevo Cliente", "Ingrese el código del mueble y los datos del cliente")
+        self.txt_nombre.focus()  # ✅ CORREGIDO: era txt_codigo_mueble.focus()
+        messagebox.showinfo("Nuevo Cliente", "Ingrese los datos del nuevo cliente")
 
     def guardar(self):
         if not self.validar_formulario():
@@ -403,6 +397,7 @@ class VentanaClientes:
         cliente.cantidad = self.txt_cantidad.get().strip()
         cliente.valor_mueble = self.txt_valor_mueble.get().strip()
         cliente.ruta_foto = self.ruta_foto
+        cliente.observaciones = self.txt_observaciones.get().strip()  # ✅ NUEVO (Entry)
 
         if self.dao.insertar_cliente(cliente):
             messagebox.showinfo("Éxito", "Cliente guardado correctamente")
@@ -430,14 +425,15 @@ class VentanaClientes:
             'tipo_mueble_vendido': self.txt_tipo_mueble.get().strip(),
             'cantidad': self.txt_cantidad.get().strip(),
             'valor_mueble': self.txt_valor_mueble.get().strip(),
-            'ruta_foto': self.ruta_foto
+            'ruta_foto': self.ruta_foto,
+            'observaciones': self.txt_observaciones.get().strip()  # ✅ NUEVO (Entry)
         }
 
         for attr, val in attrs.items():
             setattr(self.cliente_seleccionado, attr, val)
 
         if self.dao.actualizar_cliente(self.cliente_seleccionado):
-            messagebox.showinfo("Éxito", "Cliente modificado correctamente\n(Fecha de registro conservada)")
+            messagebox.showinfo("Éxito", "Cliente modificado correctamente")
             if self.tabla_visible:
                 self.buscar_cliente()
             self.limpiar_formulario()
@@ -499,6 +495,7 @@ class VentanaClientes:
 
         self.txt_cantidad.delete(0, tk.END)
         self.txt_cantidad.insert(0, "1")
+        self.txt_observaciones.delete(0, tk.END)  # ✅ Limpiar observaciones (Entry)
         self.tipo_doc_var.set("CC")
         self.txt_busqueda.delete(0, tk.END)
         self.cliente_seleccionado = None
