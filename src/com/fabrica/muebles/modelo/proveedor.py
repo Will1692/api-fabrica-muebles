@@ -29,9 +29,14 @@ class Proveedor:
 
     def __str__(self):
         """Representación en string del objeto Proveedor"""
-        return (f"Proveedor{{ID={self.id}, nombre='{self.nombre}', "
-                f"contacto='{self.contacto}', telefono='{self.telefono}', "
-                f"correo='{self.correo}'}}")
+        datos = {
+            "ID": self.id,
+            "nombre": self.nombre,
+            "contacto": self.contacto,
+            "telefono": self.telefono,
+            "correo": self.correo
+        }
+        return f"Proveedor{datos}"
 
     def __repr__(self):
         return self.__str__()

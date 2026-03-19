@@ -3,16 +3,16 @@ from com.fabrica.muebles.util.conexion_bd import ConexionBD
 
 
 class ClienteDAO:
-    """DAO para operaciones CRUD de Clientes - Versión Ultra Simplificada"""
+    """DAO para operaciones CRUD de Clientes"""
 
     def insertar_cliente(self, cliente):
         sql = "INSERT INTO clientes (nombre, telefono, direccion, email, fecha_registro, estado) VALUES (%s, %s, %s, %s, %s, %s)"
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
-            cursor.execute(sql,
-                           (cliente.nombre, cliente.telefono, cliente.direccion, cliente.email, cliente.fecha_registro,
-                            cliente.estado))
+            datos = (cliente.nombre, cliente.telefono, cliente.direccion,
+                     cliente.email, cliente.fecha_registro, cliente.estado)
+            cursor.execute(sql, datos)
             conexion.commit()
             print("Cliente insertado correctamente")
             return cursor.rowcount > 0
@@ -61,8 +61,9 @@ class ClienteDAO:
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
-            cursor.execute(sql, (cliente.nombre, cliente.telefono, cliente.direccion, cliente.email, cliente.estado,
-                                 cliente.id_cliente))
+            datos = (cliente.nombre, cliente.telefono, cliente.direccion,
+                     cliente.email, cliente.estado, cliente.id_cliente)
+            cursor.execute(sql, datos)
             conexion.commit()
             return cursor.rowcount > 0
         except Exception as e:

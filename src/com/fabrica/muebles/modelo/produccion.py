@@ -32,8 +32,13 @@ class Produccion:
 
     def __str__(self):
         """Representación en string del objeto Produccion"""
-        return (f"Produccion{{ID={self.id}, producto='{self.nombre_producto}', "
-                f"cantidad={self.cantidad}, estado='{self.estado}'}}")
+        datos = {
+            "ID": self.id,
+            "producto": self.nombre_producto,
+            "cantidad": self.cantidad,
+            "estado": self.estado
+        }
+        return f"Produccion{datos}"
 
     def __repr__(self):
         return self.__str__()

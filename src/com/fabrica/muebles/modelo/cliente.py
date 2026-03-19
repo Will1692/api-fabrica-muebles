@@ -38,9 +38,14 @@ class Cliente:
 
     def __str__(self):
         """Representación en string del objeto Cliente"""
-        return (f"Cliente{{ID={self.id_cliente}, nombre='{self.nombre}', "
-                f"telefono='{self.telefono}', email='{self.email}', "
-                f"estado='{self.get_estado_texto()}'}}")
+        datos = {
+            "ID": self.id_cliente,
+            "nombre": self.nombre,
+            "telefono": self.telefono,
+            "email": self.email,
+            "estado": self.get_estado_texto()
+        }
+        return f"Cliente{datos}"
 
     def __repr__(self):
         return self.__str__()

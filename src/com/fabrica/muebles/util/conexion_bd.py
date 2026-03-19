@@ -1,17 +1,11 @@
 import pymysql
 from pymysql import Error
-import os
 from pathlib import Path
 
 
 class ConexionBD:
     _propiedades_cargadas = False
-    _host = None
-    _port = None
-    _database = None
-    _user = None
-    _password = None
-    _charset = None
+    _config = {}
 
     def __init__(self):
         raise RuntimeError("Esta clase no debe ser instanciada. Use los métodos estáticos.")
@@ -27,7 +21,6 @@ class ConexionBD:
 
             if not properties_path.exists():
                 print(f"No se encontró el archivo: {properties_path}")
-                print("Asegúrate de que existe en: config/database.properties")
                 raise FileNotFoundError(f"Archivo de configuración no encontrado: {properties_path}")
 
             propiedades = {}
@@ -39,14 +32,17 @@ class ConexionBD:
                             key, value = line.split('=', 1)
                             propiedades[key.strip()] = value.strip()
 
-            cls._host = propiedades.get('db.host')
-            cls._port = int(propiedades.get('db.port', 3306))
-            cls._database = propiedades.get('db.database')
-            cls._user = propiedades.get('db.user')
-            cls._password = propiedades.get('db.password')
-            cls._charset = propiedades.get('db.charset', 'utf8mb4')
+            cls._config = {
+                "host":     propiedades.get('db.host'),
+                "port":     int(propiedades.get('db.port', 3306)),
+                "database": propiedades.get('db.database'),
+                "user":     propiedades.get('db.user'),
+                "password": propiedades.get('db.password'),
+                "charset":  propiedades.get('db.charset', 'utf8mb4')
+            }
 
-            if not all([cls._host, cls._database, cls._user, cls._password]):
+            campos_requeridos = ("host", "database", "user", "password")
+            if not all(cls._config[c] for c in campos_requeridos):
                 raise ValueError("Propiedades de base de datos incompletas en database.properties")
 
             print("Archivo de configuración cargado correctamente")
@@ -62,23 +58,11 @@ class ConexionBD:
             cls._inicializar()
 
         try:
-            conexion = pymysql.connect(
-                host=cls._host,
-                port=cls._port,
-                database=cls._database,
-                user=cls._user,
-                password=cls._password,
-                charset=cls._charset,
-                autocommit=False
-            )
+            conexion = pymysql.connect(**cls._config)
             return conexion
         except Error as e:
-            print(f"ERROR DETALLADO: {str(e)}")
-            print(f"Tipo de error: {type(e)}")
             raise RuntimeError(f"No se pudo establecer la conexión: {str(e)}")
         except Exception as e:
-            print(f"ERROR INESPERADO: {str(e)}")
-            print(f"Tipo de error: {type(e)}")
             raise RuntimeError(f"Error inesperado: {str(e)}")
 
     @classmethod
@@ -105,8 +89,6 @@ class ConexionBD:
 
         except Exception as e:
             print(f"Error probando la conexión: {str(e)}")
-            import traceback
-            traceback.print_exc()
             return False
 
         finally:
@@ -129,8 +111,6 @@ class ConexionBD:
                 print("Conexión cerrada correctamente")
             except Exception as e:
                 print(f"Error al cerrar conexión: {str(e)}")
-                import traceback
-                traceback.print_exc()
 
     @classmethod
     def get_connection(cls):

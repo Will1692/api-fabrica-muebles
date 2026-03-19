@@ -39,9 +39,10 @@ class ProveedorDAO:
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
+            datos = (p.nombre, p.contacto, p.telefono, p.direccion, p.correo)
             cursor.execute(
                 "INSERT INTO proveedor (nombre, contacto, telefono, direccion, correo) VALUES (%s, %s, %s, %s, %s)",
-                (p.nombre, p.contacto, p.telefono, p.direccion, p.correo))
+                datos)
             conexion.commit()
             return True
         except Exception as e:
@@ -57,9 +58,10 @@ class ProveedorDAO:
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
+            datos = (p.nombre, p.contacto, p.telefono, p.direccion, p.correo, p.id)
             cursor.execute(
                 "UPDATE proveedor SET nombre=%s, contacto=%s, telefono=%s, direccion=%s, correo=%s WHERE id=%s",
-                (p.nombre, p.contacto, p.telefono, p.direccion, p.correo, p.id))
+                datos)
             conexion.commit()
             return True
         except Exception as e:

@@ -11,8 +11,9 @@ class ProduccionDAO:
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
-            cursor.execute(sql, (produccion.nombre_producto, produccion.cantidad,
-                                 produccion.fecha_inicio, produccion.fecha_fin, produccion.estado))
+            datos = (produccion.nombre_producto, produccion.cantidad,
+                     produccion.fecha_inicio, produccion.fecha_fin, produccion.estado)
+            cursor.execute(sql, datos)
             conexion.commit()
             return True
         except Exception as e:
@@ -58,9 +59,10 @@ class ProduccionDAO:
         try:
             conexion = ConexionBD.get_conexion()
             cursor = conexion.cursor()
-            cursor.execute(sql, (produccion.nombre_producto, produccion.cantidad,
-                                 produccion.fecha_inicio, produccion.fecha_fin,
-                                 produccion.estado, produccion.id))
+            datos = (produccion.nombre_producto, produccion.cantidad,
+                     produccion.fecha_inicio, produccion.fecha_fin,
+                     produccion.estado, produccion.id)
+            cursor.execute(sql, datos)
             conexion.commit()
             return True
         except Exception as e:
@@ -72,7 +74,7 @@ class ProduccionDAO:
             conexion.close()
 
     def finalizar_produccion(self, id):
-        """Finaliza una producción (marca como Finalizado y establece fecha fin)"""
+        """Finaliza una producción"""
         sql = "UPDATE produccion SET estado='Finalizado', fecha_fin=CURDATE() WHERE id=%s"
         try:
             conexion = ConexionBD.get_conexion()
